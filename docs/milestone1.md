@@ -11,4 +11,4 @@ Important Components - We will start with a minimalist UI. A group will be start
 We will implement a gift suggestion feature. This will be our most crucial feature in order for our app to be used over others. The app will make good gift suggestion to the secret santa for their given price point. In addition to budget we will use the date the present has to be received by, possibly wishlists, items people liked in the past on the app, as well likes and dislikes of suggested items to give good recommendations for the gift.
 
 ## Wireframe
-![Wireframe](326-Het-final-Wireframe.png)
+![Wireframe](326-Het-Final-Wireframe.png)
