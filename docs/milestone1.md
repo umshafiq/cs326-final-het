@@ -12,3 +12,9 @@ We will implement a gift suggestion feature. This will be our most crucial featu
 
 ## Wireframe
 ![Wireframe](326-Het-Final-Wireframe.png)
+
+
+## Division of Labor
+Part 0 - Umar Shafiq and Jacob Stulgis
+Part 1 - Jacob Stulgis
+Part 2 - Umar Shafiq
