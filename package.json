@@ -1,0 +1,14 @@
+{
+    "name": "faker_api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+
+    "scripts":{
+        "test": "echo \"Error: no test\" && exit 1",
+        "dev" : "npx nodemon src/server.js",
+        "start": "node src/server.js"
+    },
+    "author": "",
+    "license": "ISC"    
+}
