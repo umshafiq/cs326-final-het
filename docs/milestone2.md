@@ -2,6 +2,6 @@
 ![FlowChart](secretsantaflowchart.png)
 
 ## Division of Labor
-Part 0 - 
-Part 1 - 
+Part 0 - Jacob Stulgis
+Part 1 - Jacob Stulgis 
 Part 2 -
