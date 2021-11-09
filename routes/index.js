@@ -9,7 +9,7 @@ router.get('/profile', function(req, res, next) {
   res.render('profile', { title: 'Profile' });
 });
 
-router.get('/groups', function(req, res, next) {
+router.get('/group', function(req, res, next) {
   res.render('groups', { title: 'Groups' });
 });
 
