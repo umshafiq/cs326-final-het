@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  div(class='page giftee-bg')
+    div(class="title-font text-center")
+        h1 Secret Santa Organizer
+    div(class="card mb-3 mx-auto",style="max-width: 540px;")
+        div(class="row g-0")
+            div(class="col-md-4")
+                img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...")
+            div(class="col-md-8")
+                div(class="card-body")
+                    h5(class="card-title") Gift Reciever's Name
+                    h6(class="card-subtitle mb-2 text-muted") Wishlist:
+                    p(class="card-text")
+                    | This is a wider card with supporting text below as a natural lead-in
+                    | to additional content. This content is a little bit longer.
+                    small(class="card-text text-muted") Last updated 3 mins ago
+                    div(class="card-body d-grid gap-2")
+                        h5(class="card-title") Wishlist
+                        p(class="card-text") Amazon recommendations
+                        a(href="#" class="card-link") amazon link
+                        a(href="#" class="card-link") amazon link
+                        a(href="#" class="card-link") amazon link

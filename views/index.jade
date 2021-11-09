@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  div(class='page login-bg')
+    div(class="title-font text-center")
+        h1 Secret Santa Organizer
+    div(class="row mx-auto w-50")
+        div(class="col")
+            div(class="my-5")
+                label(for="exampleInput", class="form-label") Username
+                input(id="exampleInput", class="form-control")
+                label(for="exampleInput", class="form-label") Password
+                input(id="exampleInput", class="form-control")
+            div(class="mb-3")
+                input(type="checkbox",id="exampleCheck",class="from-check-input")
+                label(for="exampleCheck",class="form-check-label") Remember me
+            a(href="/",role="button",class="btn btn-primary mx-2") Login
+            a(href="/",role="button", class="btn btn-primary mx-2") Sign up
