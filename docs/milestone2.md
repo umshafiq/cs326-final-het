@@ -10,3 +10,5 @@
 Part 0 - Jacob Stulgis
 Part 1 - Jacob Stulgis 
 Part 2 -
+
+Heroku should be deployed to <https://ssanta0.herokuapp.com/>
