@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  div(class='page profile-bg')
+    div(class="title-font text-center")
+        h1 Edit Profile
+    div(class="row mx-auto w-50")
+        div(class="col")
+            div(class="form-floating mb-3")
+                input(type="email",class="form-control",id="floatingInput",placeholder="name@example.com")
+                label(for="floatingInput") Email address
+            div(class="form-floating mb-3")
+                input(type="password",class="form-control",id="floatingPassword",placeholder="Password")
+                label(for="floatingPassword") Password
+            div(class="form-floating mb-3")
+                input(type="password",class="form-control",id="confirmationPassword",placeholder="Password")
+                label(for="confirmationPassword") Confirm password
+            a(href="#", role="button",class="btn btn-primary mx-2") Sign up

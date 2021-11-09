@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  div(class='page groups-bg')
+    div(class="title-font text-center")
+        h1 Secret Santa Organizer
+    div(class="row mx-auto w-50")
+        div(class="col")
+            div(class="card")
+                div(class="card-body")
+                    h5(class="card-title") Invite Code:
+                    h6(class="card-subtitle mb-2 text-muted") unique code goes here
+            div(class="card")
+                div(class="card-body")
+                    img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")
+                    h6(class="card-subtitle mb-2 text-muted") group member name
+            div(class="card mb-3")
+                div(class="card-body")
+                    img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")
+                    h6(class="card-subtitle mb-2 text-muted") group member name
+            a(href="central-nav.html",role="button",class="btn btn-primary mb-3") Done
+
