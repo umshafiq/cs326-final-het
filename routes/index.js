@@ -30,6 +30,22 @@ router.get('/group/:id', auth.isLoggedIn, function(req, res, next) {
 
 });
 
+router.get('/group/:id/items', auth.isLoggedIn, function(req, res, next) {
+  db.one(`SELECT * FROM groups WHERE id = $1`, [req.params.id])
+        .then((group) => {
+            db.any(`SELECT * FROM items WHERE price < $1`, [group.price_limit])
+                .then((items) => {
+                    res.render('items', { title: 'Item Suggestions', group: group, items: items });
+                })
+                .catch(err => {
+                    res.render('error');
+                });
+        })
+        .catch(err => {
+            res.render('error');
+        });
+});
+
 router.get('/giftee', auth.isLoggedIn, function(req, res, next) {
   res.render('giftee', { title: 'Giftee' });
 });
