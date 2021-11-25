@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/profile', auth.isLoggedIn, function(req, res, next) {
-  res.render('profile', { title: 'Profile' });
+  res.render('profile', { title: 'Profile', user: req.user });
 });
 
 router.get('/group', auth.isLoggedIn, function(req, res, next) {
