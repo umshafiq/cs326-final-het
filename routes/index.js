@@ -18,11 +18,17 @@ router.get('/group', auth.isLoggedIn, function(req, res, next) {
 
 router.get('/group/:id', auth.isLoggedIn, function(req, res, next) {
   Promise.all([db.one(`SELECT * FROM groups WHERE id = $1`, [req.params.id]),
-               db.any(`SELECT * FROM users INNER JOIN group_users ON group_users.user_id = users.id WHERE group_users.group_id = $1`, [req.params.id])])
+               db.any(`SELECT group_users.is_admin, users.id, users.name, giftee.name as giftee_name, giftee.email as giftee_email FROM group_users INNER JOIN users ON group_users.user_id = users.id LEFT JOIN users as giftee ON group_users.giftee_id = giftee.id WHERE group_users.group_id = $1`, [req.params.id])])
         .then((data) => {
             group = data[0];
             users = data[1];
-            res.render('groups', { title: 'Groups', group: group, users: users });
+            giftee = null;
+            for (user of users) {
+                if (user.id === req.user.id) {
+                    giftee = {name: user.giftee_name, email: user.giftee_email};
+                }
+            }
+            res.render('groups', { title: 'Groups', group: group, users: users, giftee: giftee });
         })
         .catch(err => {
             res.render('error');

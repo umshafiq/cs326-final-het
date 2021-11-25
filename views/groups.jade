@@ -10,10 +10,18 @@ block content
                 div(class="card-body")
                     h5(class="card-title") #{group.group_name}
                     h6(class="card-subtitle mb-2 text-muted") #{group.price_limit}, #{group.deadline_at}
+            if giftee
+                 div(class="card")
+                    div(class="card-body")
+                        img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")
+                        h6(class="card-subtitle mb-2 text-muted") YOUR GIFTEE: #{giftee.name}, #{giftee.email}
+               
             each user in users
                 div(class="card")
                     div(class="card-body")
                         img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")
                         h6(class="card-subtitle mb-2 text-muted") #{user.name}
+                        if user.is_admin
+                            h6 ADMIN
             a(href="central-nav.html",role="button",class="btn btn-primary mb-3") Done
 
