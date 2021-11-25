@@ -5,7 +5,7 @@ let auth = (req, res, next) => {
     db.one(`SELECT * FROM users WHERE id = $1`, [user_id])
         .then(() => {
             next();
-        });
+        })
         .catch(err => {
             next(err);
         });
