@@ -11,6 +11,11 @@ let isLoggedIn = (req, res, next) => {
         });
 };
 
+let login = (req, res) => {
+    res.setCookie('id', req.params.id);
+    res.redirect('/profile');
+};
+
 let logout = (req, res) => {
     res.clearCookie('id');
     res.redirect('/');
