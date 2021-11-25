@@ -24,7 +24,6 @@ router.get('/', function(req, res, next) {
             res.status(400).json({"error": err.message});
             console.error(err);
         });
-    });
 });
 
 /* Create a new group */
@@ -42,7 +41,6 @@ router.post('/', function(req, res, next) {
             res.status(400).json({"error": err.message});
             console.error(err);
         });
-    });
 });
 
 /* Get a single group by id */
@@ -60,7 +58,6 @@ router.get('/:id', function(req, res, next) {
             res.status(400).json({"error": err.message});
             console.error(err);
         });
-    });
 });
 
 /* Update a group */
@@ -77,7 +74,6 @@ router.put('/:id', function(req, res, next) {
             res.status(400).json({"error": err.message});
             console.error(err);
         });
-    });
 });
 
 /* Delete a group */
@@ -94,7 +90,6 @@ router.delete('/:id', function(req, res, next) {
             res.status(400).json({"error": err.message});
             console.error(err);
         });
-    });
 });
 
 
