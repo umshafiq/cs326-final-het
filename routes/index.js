@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const auth = require('../auth');
+const db = require('../database');
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Login' });
@@ -13,6 +14,18 @@ router.get('/profile', auth.isLoggedIn, function(req, res, next) {
 
 router.get('/group', auth.isLoggedIn, function(req, res, next) {
   res.render('groups', { title: 'Groups' });
+});
+
+router.get('/group/:id', auth.isLoggedIn, function(req, res, next) {
+  Promise.all([db.one(`SELECT * FROM groups WHERE id = $1`, [req.params.id]),
+               db.any(`SELECT * FROM users INNER JOIN group_users ON group_users.user_id = users.id WHERE group_users.group_id = ?`, [req.params.id])])
+        .then((group, users) => {
+            res.render('groups', { title: 'Groups', group: data, users: users });
+        })
+        .catch(err => {
+            res.redirect('/');
+        });
+
 });
 
 router.get('/giftee', auth.isLoggedIn, function(req, res, next) {
