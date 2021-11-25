@@ -21,4 +21,4 @@ let logout = (req, res) => {
     res.redirect('/');
 };
 
-module.exports = { isLoggedIn, logout };
+module.exports = { isLoggedIn, login, logout };
