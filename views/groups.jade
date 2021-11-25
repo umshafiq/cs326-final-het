@@ -10,7 +10,7 @@ block content
                 div(class="card-body")
                     h5(class="card-title") #{group.group_name}
                     h6(class="card-subtitle mb-2 text-muted") #{group.price_limit}, #{group.deadline_at}
-            - for user in users
+            each user in users
                 div(class="card")
                     div(class="card-body")
                         img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")

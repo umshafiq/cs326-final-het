@@ -19,9 +19,9 @@ router.get('/group', auth.isLoggedIn, function(req, res, next) {
 router.get('/group/:id', auth.isLoggedIn, function(req, res, next) {
   Promise.all([db.one(`SELECT * FROM groups WHERE id = $1`, [req.params.id]),
                db.any(`SELECT * FROM users INNER JOIN group_users ON group_users.user_id = users.id WHERE group_users.group_id = $1`, [req.params.id])])
-        .then((group, users) => {
-            console.log(group);
-            console.log(users);
+        .then((data) => {
+            group = data[0];
+            users = data[1];
             res.render('groups', { title: 'Groups', group: group, users: users });
         })
         .catch(err => {
