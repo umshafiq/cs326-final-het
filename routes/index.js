@@ -19,6 +19,8 @@ router.get('/giftee', auth.isLoggedIn, function(req, res, next) {
   res.render('giftee', { title: 'Giftee' });
 });
 
+router.get('/login/:id', auth.login);
+
 router.get('/logout', auth.logout);
 
 module.exports = router;
