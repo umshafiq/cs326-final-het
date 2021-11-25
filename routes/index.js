@@ -23,7 +23,8 @@ router.get('/group/:id', auth.isLoggedIn, function(req, res, next) {
             res.render('groups', { title: 'Groups', group: data, users: users });
         })
         .catch(err => {
-            res.redirect('/');
+            console.log(err);
+            res.render(err);
         });
 
 });
