@@ -1,4 +1,4 @@
-import pgPromise from 'pg-promise';
+const pgPromise = require('pg-promise');
 
 let pgp = pgPromise({});
 let db = pgp({
