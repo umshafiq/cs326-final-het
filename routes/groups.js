@@ -27,8 +27,8 @@ router.get('/', function(req, res, next) {
 
 /* Create a new group */
 router.post('/', function(req, res, next) {
-    let sql = `INSERT INTO groups (name, limit_cents, deadline) VALUES (?, ?, ?)`;
-    let params = [req.body.name, req.body.limit_cents, req.body.deadline];
+    let sql = `INSERT INTO groups (name, price_limit, deadline_at) VALUES (?, ?, ?)`;
+    let params = [req.body.name, req.body.price_limit, req.body.deadline_at];
     db.run(sql, params, function (err, result) {
         if (err) {
             res.status(400).json({"error": err.message});
@@ -63,8 +63,8 @@ router.get('/:id', function(req, res, next) {
 
 /* Update a group */
 router.put('/:id', function(req, res, next) {
-    let sql = `UPDATE groups SET name = ?, limit_cents = ?, deadline = ? WHERE id = ?`;
-    let params = [req.body.name, req.body.limit_cents, req.body.deadline, req.params.id];
+    let sql = `UPDATE groups SET name = ?, price_limit = ?, deadline_at = ? WHERE id = ?`;
+    let params = [req.body.name, req.body.price_limit, req.body.deadline_at, req.params.id];
     db.run(sql, params, function (err, result) {
         if (err) {
             res.status(400).json({"error": err.message});

@@ -1,0 +1,151 @@
+secret santa database schema
+
+users
+- id                 serial primary key
+- name               varchar(255) not null
+- email              varchar(255) not null unique
+- address            varchar(255)
+- icon_b64           text
+
+groups
+- id                 serial primary key
+- group_name         varchar(255) not null
+- price_limit_cents  int not null
+- deadline_at        money not null
+- is_locked          boolean not null default(false)
+- icon_b64           text
+
+items
+- id                 serial primary key
+- name               varchar(255) not null
+- description        text
+- price              money not null
+- url                varchar(255)
+- icon_b64           text
+
+notifications
+- id                 serial primary key
+- user_id            integer not null
+- is_read            boolean not null default(false)
+- subject            varchar(255)
+- message            text
+  constraint fk_user
+    foreign key(user_id)
+      references users(id)
+
+group_users
+- id                 serial primary key
+- group_id           integer not null
+- user_id            integer not null
+- giftee_id          integer null
+- is_admin           boolean not null default(false)
+- item_id            integer null
+- rating             integer null
+  constraint fk_group
+    foreign key(group_id)
+      references groups(id)
+  constraint fk_user
+    foreign key(user_id)
+      references users(id)
+  constraint fk_giftee
+    foreign key(giftee_id)
+      references users(id)
+  constraint fk_item
+    foreign key(item_id)
+      references items(id)
+
+queries
+
+get the user id of the user with this e-mail address:
+
+- select id from users where email = "ushafiq@gmail.com";
+
+get the groups that a particular user is a member of
+
+- select group_id from group_users where user_id = 3;
+
+get the users that are in a particular group
+
+- select user_id from group_users where group_id = 2;
+
+get the names of the users that are in a particular group
+
+- select users.name from group_users inner join users
+      on (group_users.user_id = users.id)
+      where group_users.group_id = 2;
+
+
+unauthenticated users:
+- user sign in page
+- user sign up page
+
+authenticated users can see:
+- user sign out page
+- user edit page
+- list notifications
+
+- groups list page (list all the groups you're a member of)
+- group page (list a specific group)
+  - this will show your assignment in the group
+
+- items suggestion page
+- report that an item has been purchased
+- report that an item has been received
+
+admins can see
+- group edit page
+
+super admins can see
+- page to add/edit/delete items
+
+
+groups
+- Seinfeld
+- It's Always Sunny in Philadelphia
+- Friends
+- Curb Your Enthusiasm
+
+users
+"The Red Dot"
+- Jerry Seinfeld (*)
+- George Costanza
+- Cosmo Kramer
+- Elaine Benes
+
+"The Paddy Wagon"
+- Ronald "Mac" McDonald (*)
+- Charlie Kelly
+- Dennis Reynolds
+- Deeandra Reynolds
+- Frank Reynolds
+
+"The Holiday Armadillo"
+- Rachel Green
+- Monica Geller (*)
+- Ross Geller
+- Chandler Bing
+- Joey Tribbiani
+- Phoebe Buffay
+
+"The Secret Santa From Hell"
+- Larry David
+- Cheryl David
+- Jeff Greene
+- Leon Black
+- Richard Lewis (*)
+
+
+todo list
+
+- draw schema.svg
+- create a database init script
+- populate database with demo data
+
+- make login/logout page
+
+- make CRUD interfaces for every table
+  what requests do we need to make? let's figure
+  them out page by page
+
+- make the remaining pages
+- make them look good
