@@ -13,30 +13,34 @@ const db = require('../database');
 /* Groups index listing. */
 router.get('/', function(req, res, next) {
     let sql = `SELECT * FROM groups`;
-    db.all(sql, function (err, rows) {
-        if (err) {
+    db.any(sql)
+        .then(() => {
+            res.json({
+                "message": "success",
+                "data": rows
+            });
+        })
+        .catch(err => {
             res.status(400).json({"error": err.message});
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": rows
+            console.error(err);
         });
     });
 });
 
 /* Create a new group */
 router.post('/', function(req, res, next) {
-    let sql = `INSERT INTO groups (name, price_limit, deadline_at) VALUES (?, ?, ?)`;
+    let sql = `INSERT INTO groups (name, price_limit, deadline_at) VALUES ($1, $2, $3)`;
     let params = [req.body.name, req.body.price_limit, req.body.deadline_at];
-    db.run(sql, params, function (err, result) {
-        if (err) {
+    db.none(sql, params)
+        .then(() => {
+            res.json({
+                "message": "success",
+                "id": this.lastID
+            });
+        })
+        .catch(err => {
             res.status(400).json({"error": err.message});
-            return;
-        }
-        res.json({
-            "message": "success",
-            "id": this.lastID
+            console.error(err);
         });
     });
 });
@@ -45,48 +49,50 @@ router.post('/', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
     let sql = `SELECT * FROM groups WHERE id = ?`;
     let params = [req.params.id];
-    db.get(sql, params, function (err, row) {
-        if (err) {
+    db.one(sql, params)
+        .then((data) => {
+            res.json({
+                "message": "success",
+                "data": data
+            });
+        })
+        .catch(err => {
             res.status(400).json({"error": err.message});
-            return;
-        }
-        if (!row) {
-            res.status(404).json({"error": "group not found"});
-            return;
-        }
-        res.json({
-            "message": "success",
-            "data": row
+            console.error(err);
         });
     });
 });
 
 /* Update a group */
 router.put('/:id', function(req, res, next) {
-    let sql = `UPDATE groups SET name = ?, price_limit = ?, deadline_at = ? WHERE id = ?`;
+    let sql = `UPDATE groups SET name = $1, price_limit = $2, deadline_at = $3 WHERE id = $4`;
     let params = [req.body.name, req.body.price_limit, req.body.deadline_at, req.params.id];
-    db.run(sql, params, function (err, result) {
-        if (err) {
+    db.none(sql, params)
+        .then(() => {
+            res.json({
+                "message": "success"
+            });
+        })
+        .catch(err => {
             res.status(400).json({"error": err.message});
-            return;
-        }
-        res.json({
-            "message": "success"
+            console.error(err);
         });
     });
 });
 
 /* Delete a group */
 router.delete('/:id', function(req, res, next) {
-    let sql = `DELETE FROM groups WHERE id = ?`;
+    let sql = `DELETE FROM groups WHERE id = $1`;
     let params = [req.params.id];
-    db.run(sql, params, function (err, result) {
-        if (err) {
+    db.none(sql, params)
+        .then(() => {
+            res.json({
+                "message": "success"
+            });
+        })
+        .catch(err => {
             res.status(400).json({"error": err.message});
-            return;
-        }
-        res.json({
-            "message": "success"
+            console.error(err);
         });
     });
 });

@@ -76,28 +76,24 @@ get the names of the users that are in a particular group
 
 
 unauthenticated users:
-- user sign in page
-- user sign up page
+- user sign in page   -                                       /
+- user sign up page   -                                       /signup
 
 authenticated users can see:
-- user sign out page
-- user edit page
-- list notifications
+- user sign out page  -                                       /logout
+- user edit page      -                                       /profile
+- list notifications  -                                       /notifications
 
-- groups list page (list all the groups you're a member of)
-- group page (list a specific group)
+- groups list page (list all the groups you're a member of)   /groups
+- group page (list a specific group)                          /group/id
   - this will show your assignment in the group
 
-- items suggestion page
-- report that an item has been purchased
-- report that an item has been received
+- items suggestion page                                       /groups/id/items
+- report that an item has been purchased                      /groups/id/item_sent
+- report that an item has been received                       /groups/id/item_received
 
 admins can see
-- group edit page
-
-super admins can see
-- page to add/edit/delete items
-
+- group edit page                                             /groups/id/edit
 
 groups
 - Seinfeld
