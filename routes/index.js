@@ -7,16 +7,18 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Login' });
 });
 
-router.get('/profile', auth, function(req, res, next) {
+router.get('/profile', auth.isLoggedIn, function(req, res, next) {
   res.render('profile', { title: 'Profile' });
 });
 
-router.get('/group', function(req, res, next) {
+router.get('/group', auth.isLoggedIn, function(req, res, next) {
   res.render('groups', { title: 'Groups' });
 });
 
-router.get('/giftee', function(req, res, next) {
+router.get('/giftee', auth.isLoggedIn, function(req, res, next) {
   res.render('giftee', { title: 'Giftee' });
 });
+
+router.get('/logout', auth.logout);
 
 module.exports = router;
