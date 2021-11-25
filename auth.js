@@ -12,7 +12,7 @@ let isLoggedIn = (req, res, next) => {
 };
 
 let login = (req, res) => {
-    res.setCookie('id', req.params.id);
+    res.cookie('id', req.params.id);
     res.redirect('/profile');
 };
 
