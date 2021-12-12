@@ -14,14 +14,53 @@ The Secret Santa Organizer is meant to facilitate the creation and maintenance o
 Umar Shafiq
 
 ## User Interface
+Users are able to see different views depending on their access level.
 
+- Unauthenticated Users
+  - Sign in page
+  - Sign up page
+- Authenticated Users
+  - Sign out page
+  - Profile edit page
+  - New group page (which makes them the administrator of the group they're creating)
+  - Group list page (lists all the groups the user is a member of)
+  - Group info page (lists information for a specific group, including the signed-in user's assignment)
+  - Items suggestion page
+  - Report that an item has been purchased and dispatched
+  - Report that an item has been received and rate it
+  - Withdraw from the group
+- Group administrators
+  - Group edit page
+  - Create assignment
+- Site administrators
+  - Pages to add/edit/delete items
 
 ## APIs
 
+- Create profile: POST to `/crud/user`
+- Edit profile: PUT to `/crud/user/:id` [authenticated]
+- Create group: POST to `/crud/group` [authenticated]
+- Create group assignments: POST to `/crud/group/:id/assign` [authenticated, admin only]
+- Update group: PUT to `/crud/group/:id`
+- Report that an item has been purchased or received: PUT to `/crud/group_users/:group_id/:user_id`
+- Withdraw from a group: DELETE to `/crud/group_users/:group_id/:user_id/withdraw`
 
 ## URL Routes
 
+The following routes are all obtained via `GET` requests.
 
+- Sign in `/login/:id` [anybody]
+- Sign out `/logout` [anybody]
+- Sign up `/signup` [unauthenticated]
+- Edit profile `/profile` [authenticated]
+- Create group page `/group`
+- Group list page (lists all the groups the user is a member of) `/groups`
+- Group edit page `/groups/:id/edit`
+- Group info page (lists information for a specific group, including the signed-in user's assignment) `/groups/:id`
+- Items suggestion page `/items`
+- Report that an item has been purchased and dispatched `/groups/:id/gifter`
+- Report that an item has been received and rate it `/groups/:id/giftee`
+- Withdraw from the group `/groups/:id/withdraw`
 
 ## Database
 The database is documented in [our schema diagram](../database/schema.pdf).

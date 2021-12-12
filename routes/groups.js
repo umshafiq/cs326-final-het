@@ -10,42 +10,9 @@ const db = require('../database');
 // /:group_id   PUT        Update a group with new info.
 // /:group_id   DELETE     Delete a group.
 
-/* Groups index listing. */
-router.get('/', function(req, res, next) {
-    let sql = `SELECT * FROM groups`;
-    db.any(sql)
-        .then(() => {
-            res.json({
-                "message": "success",
-                "data": rows
-            });
-        })
-        .catch(err => {
-            res.status(400).json({"error": err.message});
-            console.error(err);
-        });
-});
-
-/* Create a new group */
-router.post('/', function(req, res, next) {
-    let sql = `INSERT INTO groups (name, price_limit, deadline_at) VALUES ($1, $2, $3)`;
-    let params = [req.body.name, req.body.price_limit, req.body.deadline_at];
-    db.none(sql, params)
-        .then(() => {
-            res.json({
-                "message": "success",
-                "id": this.lastID
-            });
-        })
-        .catch(err => {
-            res.status(400).json({"error": err.message});
-            console.error(err);
-        });
-});
-
 /* Get a single group by id */
 router.get('/:id', function(req, res, next) {
-    let sql = `SELECT * FROM groups WHERE id = ?`;
+    let sql = `SELECT * FROM groups WHERE id = $1`;
     let params = [req.params.id];
     db.one(sql, params)
         .then((data) => {
@@ -59,6 +26,26 @@ router.get('/:id', function(req, res, next) {
             console.error(err);
         });
 });
+
+/* Create a new group */
+router.post('/', isLoggedIn, function(req, res, next) {
+    let sql = `INSERT INTO groups (name, price_limit, deadline_at) VALUES ($1, $2, $3)`;
+    let params = [req.body.name, req.body.price_limit, req.body.deadline_at];
+    db.none(sql, params)
+        .then(() => {
+            let sql = `INSERT INTO group_users (group_id, user_id, is_admin) VALUES ($1, $2, TRUE)`;
+            let params = [this.lastID, req.user.id];
+            db.none(sql, params)
+                .then(() => {
+                    res.redirect('/groups/'.concat(this.lastID.toString()).concat('/edit'));
+                });
+        })
+        .catch(err => {
+            res.status(400).json({"error": err.message});
+            console.error(err);
+        });
+});
+
 
 /* Update a group */
 router.put('/:id', function(req, res, next) {
@@ -90,6 +77,44 @@ router.delete('/:id', function(req, res, next) {
             res.status(400).json({"error": err.message});
             console.error(err);
         });
+});
+
+
+/* assign group members */
+router.post('/group/:id/assign', auth.isLoggedIn, function(req, res, next) {
+  db.any(`SELECT * FROM users INNER JOIN group_users ON group_users.user_id = users.id WHERE group_users.group_id = $1`, [req.params.id])
+      .then((users) => {
+          let user_is_admin = false;
+          let group_unassigned = true;
+          for (user of users) {
+              if (user.id === req.user.id && user.is_admin) {
+                  user_is_admin = user.is_admin;
+              }
+              if (user.giftee_id !== null) {
+                  group_unassigned = false;
+              }
+          }
+          if (!user_is_admin) {
+              res.status(400).render('error');
+              return;
+          }
+          if (!group_unassigned) {
+              res.status(400).render('error');
+              return;
+          }
+          // if we made it this far, it's time to do the shuffle
+          // amazingly, this can be done in one line of SQL
+          db.none(`UPDATE group_users SET giftee_id = subtable1.coalesce FROM (SELECT user_id, COALESCE(lead(user_id) OVER (ORDER BY r), first_value(user_id) OVER (ORDER BY r)) FROM (SELECT random() as r, user_id FROM group_users WHERE group_id = $1) AS subtable) AS subtable1 WHERE group_users.group_id = $1 and group_users.user_id = subtable1.user_id`, [req.params.id])
+              .then(() => {
+                  res.redirect('/group/' + req.params.id.toString());
+              })
+              .catch(err => {
+                  res.render('error');
+              });
+      })
+      .catch(err => {
+          res.render('error');
+      });
 });
 
 

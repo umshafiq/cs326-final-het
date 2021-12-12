@@ -8,9 +8,28 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Login' });
 });
 
+router.get('/signup', function(req, res, next) {
+  res.render('signup', { title: 'Signup' });
+});
+
 router.get('/profile', auth.isLoggedIn, function(req, res, next) {
   res.render('profile', { title: 'Profile', user: req.user });
 });
+
+router.get('/create_group', auth.isLoggedIn, function(req, res, next) {
+  res.render('create_group', { title: 'Create a New Group' });
+});
+
+router.get('/groups/:id/edit', auth.isLoggedIn, function(req, res, next) {
+  db.one(`SELECT * FROM groups WHERE id = $1`, [req.params.id])
+  .then((data) => {
+      res.render('edit_group', { title: 'Edit Group', group: data });
+  })
+  .catch(err => {
+      res.render('error');
+  });
+});
+
 
 router.get('/group', auth.isLoggedIn, function(req, res, next) {
   res.render('groups', { title: 'Groups' });
@@ -33,7 +52,6 @@ router.get('/group/:id', auth.isLoggedIn, function(req, res, next) {
         .catch(err => {
             res.render('error');
         });
-
 });
 
 router.get('/group/:id/items', auth.isLoggedIn, function(req, res, next) {
@@ -52,46 +70,44 @@ router.get('/group/:id/items', auth.isLoggedIn, function(req, res, next) {
         });
 });
 
-router.get('/group/:id/assign', auth.isLoggedIn, function(req, res, next) {
-  db.any(`SELECT * FROM users INNER JOIN group_users ON group_users.user_id = users.id WHERE group_users.group_id = $1`, [req.params.id])
-      .then((users) => {
-          let user_is_admin = false;
-          let group_unassigned = true;
-          for (user of users) {
-              if (user.id === req.user.id && user.is_admin) {
-                  user_is_admin = user.is_admin;
-              }
-              if (user.giftee_id !== null) {
-                  group_unassigned = false;
-              }
-          }
-          if (!user_is_admin) {
-              res.status(400).render('error');
-              return;
-          }
-          if (!group_unassigned) {
-              res.status(400).render('error');
-              return;
-          }
-          // if we made it this far, it's time to do the shuffle
-          // amazingly, this can be done in one line of SQL
-          db.none(`UPDATE group_users SET giftee_id = subtable1.coalesce FROM (SELECT user_id, COALESCE(lead(user_id) OVER (ORDER BY r), first_value(user_id) OVER (ORDER BY r)) FROM (SELECT random() as r, user_id FROM group_users WHERE group_id = $1) AS subtable) AS subtable1 WHERE group_users.group_id = $1 and group_users.user_id = subtable1.user_id`, [req.params.id])
-              .then(() => {
-                  res.redirect('/group/' + req.params.id.toString());
-              })
-              .catch(err => {
-                  res.render('error');
-              });
-      })
-      .catch(err => {
-          res.render('error');
-      });
+router.get('/group/:id/gifter', auth.isLoggedIn, function(req, res, next) {
+  Promise.all([db.manyOrNone(`SELECT * FROM items`),
+               db.one(`SELECT * FROM group_users WHERE group_id = $1 AND user_id = $2`,
+                      [req.params.id, user.id])])
+  .then((data) => {
+    const items = data[0];
+    const group_assignment = data[1];
+    if (group_assignment.giftee_id === null) {
+        res.status(400).render('Santa Assignments have not yet been made!');
+    }
+    db.one(`SELECT * FROM users WHERE user_id = $1`, [group_assignment.giftee_id])
+    .then((giftee) => {
+       res.render('gifter', { title: 'Gifter', items: items, giftee: giftee });
+    });
+  });
 });
 
+router.get('/group/:id/giftee', auth.isLoggedIn, function(req, res, next) {
+  db.one(`SELECT * FROM group_users WHERE group_id = $1 AND user_id = $2`,
+         [req.params.id, user.id])
+  .then((group_info) => {
+    if (group_info.item_id === null) {
+        res.status(400).render('Santa hasn\'t sent you your gift yet!');
+    } else {
+      db.one(`SELECT * FROM items WHERE item_id = $2`, [group_info.item_id])
+      .then((item) => {
+        res.render('giftee', { title: 'Giftee', group_info: group_info, item: item });
+      });
+    }
+  });
+});
 
-
-router.get('/giftee', auth.isLoggedIn, function(req, res, next) {
-  res.render('giftee', { title: 'Giftee' });
+router.get('/group/:id/withdraw', auth.isLoggedIn, function(req, res, next) {
+  db.one(`SELECT * FROM groups WHERE id = $1`,
+         [req.params.id, user.id])
+  .then((group) => {
+     res.render('withdraw', { title: 'Withdraw', group: group });
+  });
 });
 
 router.get('/login/:id', auth.login);
