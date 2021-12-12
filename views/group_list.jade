@@ -12,4 +12,4 @@ block content
                             h5(class="card-title") #{group.group_name}
                             h6(class="card-subtitle mb-2 text-muted") #{group.price_limit}, #{moment(group.deadline_at).format('YYYY-MM-DD')}
                     a(href="/group/#{group.id}",role="button",class="btn btn-primary mb-3") More
-     a(href="/create_group",role="button",class="btn btn-primary mb-3") Create a New Group
+            a(href="/create_group",role="button",class="btn btn-primary mb-3") Create a New Group
