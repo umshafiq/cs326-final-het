@@ -5,11 +5,17 @@ const auth = require('../auth');
 const db = require('../database');
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Login' });
+  if (req.user) {
+    return res.redirect('/profile');
+  }
+  res.render('index', { title: 'Login', user: null });
 });
 
 router.get('/signup', function(req, res, next) {
-  res.render('signup', { title: 'Signup' });
+  if (req.user) {
+    return res.redirect('/profile');
+  }
+  res.render('signup', { title: 'Signup', user: null });
 });
 
 router.get('/profile', auth.isLoggedIn, function(req, res, next) {
