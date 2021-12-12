@@ -3,25 +3,40 @@ extends layout
 block content
   div(class='page groups-bg')
     div(class="title-font text-center")
-        h1 Secret Santa Organizer
+        h1 Your Group
     div(class="row mx-auto w-50")
         div(class="col")
             div(class="card")
                 div(class="card-body")
                     h5(class="card-title") #{group.group_name}
-                    h6(class="card-subtitle mb-2 text-muted") #{group.price_limit}, #{group.deadline_at}
+                    h6(class="card-subtitle mb-2 text-muted") #{group.price_limit}, #{moment(group.deadline_at).format('YYYY-MM-DD')}
+                if is_admin
+                    a(href="/groups/#{group.id}/edit",role="button",class="btn btn-primary mb-3") Edit
+                if gift_sent
+                    a(href="/group/#{group.id}/giftee",role="button",class="btn btn-primary mb-3") I received my gift!
             if giftee
-                 div(class="card")
-                    div(class="card-body")
-                        img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")
-                        h6(class="card-subtitle mb-2 text-muted") YOUR GIFTEE: #{giftee.name}, #{giftee.email}
-               
-            each user in users
                 div(class="card")
                     div(class="card-body")
                         img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")
-                        h6(class="card-subtitle mb-2 text-muted") #{user.name}
-                        if user.is_admin
+                        h6(class="card-subtitle mb-2 text-muted") YOUR GIFTEE: #{giftee.name}, #{giftee.email}
+                if !purchased
+                    a(href="/group/#{group.id}/items",role="button",class="btn btn-primary mb-3") Item Suggestions
+                    br
+                    a(href="/group/#{group.id}/gifter",role="button",class="btn btn-primary mb-3") I sent something
+                else
+                    p Thanks for purchasing your gift!
+               
+            each luser in users
+                div(class="card")
+                    div(class="card-body")
+                        img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")
+                        h6(class="card-subtitle mb-2 text-muted") #{luser.name}
+                        if luser.is_admin
                             h6 ADMIN
-            a(href="central-nav.html",role="button",class="btn btn-primary mb-3") Done
-
+                if is_admin || luser.id === user.id
+                    a(href="#" onClick='fetch("/crud/group_users/#{group.id}/#{user.id}", { method: "DELETE" })',role="button",class="btn btn-primary mb-3") Remove
+            if is_admin && giftee === null
+                br
+                a(href="/group/#{group.id}/add",role="button",class="btn btn-primary mb-3") Add
+                br
+                a(href="#" onClick='fetch("/crud/groups/#{group.id}/assign", { method: "POST"})',role="button",class="btn btn-primary mb-3") Set Assignments

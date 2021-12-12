@@ -1,6 +1,12 @@
 const pgPromise = require('pg-promise');
 
-let pgp = pgPromise({});
+const initOptions = {
+    query(e) {
+        console.log('query', e.query);
+    }
+};
+
+let pgp = pgPromise(initOptions);
 let db = pgp({
     connectionString: process.env.DATABASE_URL,
     max: 30,

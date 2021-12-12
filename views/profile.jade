@@ -4,12 +4,16 @@ block content
   div(class='page profile-bg')
     div(class="title-font text-center")
         h1 Edit Profile
+    div(class="row mx-auto w-50 error" id="error")
     div(class="row mx-auto w-50")
         div(class="col")
             div(class="form-floating mb-3")
-                input(type="name",class="form-control",id="floatingInput",value="#{user.name}")
-                label(for="floatingInput") Name
+                input(type="name",class="form-control",id="name",value="#{user.name}")
+                label(for="name") Name
             div(class="form-floating mb-3")
-                input(type="email",class="form-control",id="floatingInput",value="#{user.email}")
-                label(for="floatingInput") Email address
-            a(href="#", role="button",class="btn btn-primary mx-2") Update
+                input(type="email",class="form-control",id="email",value="#{user.email}")
+                label(for="email") Email address
+            div(class="form-floating mb-3")
+                input(class="form-control",id="address",value="#{user.address || ''}")
+                label(for="address") Address
+            a(href="#", role="button",class="btn btn-primary mx-2",onclick='fetch("/crud/users/#{user.id}", { method:"PUT", headers: {"Content-Type": "application/json" }, body: JSON.stringify({"address": document.getElementById("address").value, "email": document.getElementById("email").value, "name": document.getElementById("name").value})} ).then(function(response) { if (!response.ok) { response.json().then(data => { document.getElementById("error").innerHTML = data.error; }); } else { document.getElementById("error").innerHTML = ""; } });') Update

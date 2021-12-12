@@ -1,6 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const db = require('../database');
+const auth = require('../auth');
 
 // CRUD API for group membership management
 // Route                 HTTP Verb  Description
@@ -28,7 +29,7 @@ router.get('/:group_id', function(req, res, next) {
 });
 
 /* Add a user to a group */
-router.post('/:group_id/:user_id', isLoggedIn, function(req, res, next) {
+router.post('/:group_id/:user_id', auth.isLoggedIn, function(req, res, next) {
     let sql = `INSERT INTO group_users (group_id, user_id) VALUES ($1, $2)`;
     let params = [req.params.group_id, req.params.user_id];
     db.none(sql, params)
@@ -60,7 +61,7 @@ router.get('/:group_id/:user_id', function(req, res, next) {
         });
 });
 
-/* Update a group */
+/* Update a membership */
 router.put('/:group_id/:user_id', function(req, res, next) {
     let sql = `UPDATE group_users SET is_admin = $1, item_id = $2, rating = $3 WHERE group_id = $4 AND user_id = $5`;
     let params = [req.body.is_admin, req.body.item_id, req.body.rating, req.params.group_id, req.params.user_id];

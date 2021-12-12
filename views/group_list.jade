@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div(class='page groups-bg')
+    div(class="title-font text-center")
+        h1 Your Groups
+    div(class="row mx-auto w-50")
+        div(class="col")
+            each group in groups
+                    div(class="card")
+                        div(class="card-body")
+                            h5(class="card-title") #{group.group_name}
+                            h6(class="card-subtitle mb-2 text-muted") #{group.price_limit}, #{moment(group.deadline_at).format('YYYY-MM-DD')}
+                    a(href="/group/#{group.id}",role="button",class="btn btn-primary mb-3") More

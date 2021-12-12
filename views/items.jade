@@ -9,11 +9,9 @@ block content
             div(class="card")
                 div(class="card-body")
                     h5(class="card-title") #{group.group_name}
-                    h6(class="card-subtitle mb-2 text-muted") Price Limit: #{group.price_limit}, Deadline: #{group.deadline_at}
+                    h6(class="card-subtitle mb-2 text-muted") Price Limit: #{group.price_limit}, Deadline: #{moment(group.deadline_at).format('YYYY-MM-DD')}
             each item in items
                 div(class="card")
                     div(class="card-body")
                         h6(class="card-subtitle mb-2 text-muted")
                             a(href="#{item.url}") #{item.name}, #{item.price}
-            a(href="central-nav.html",role="button",class="btn btn-primary mb-3") Done
-

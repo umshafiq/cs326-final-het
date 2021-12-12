@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  div(class='page profile-bg')
+    div(class="title-font text-center")
+        h1 Edit Group
+    div(class="row mx-auto w-50 error" id="error")
+    div(class="row mx-auto w-50")
+        div(class="col")
+            div(class="form-floating mb-3")
+                input(name="group_name",class="form-control",id="group_name",value="#{group.group_name}")
+                label(for="group_name") Group Name
+            div(class="form-floating mb-3")
+                input(name="price_limit",class="form-control",id="price_limit",value="#{group.price_limit}")
+                label(for="price_limit") Price Limit
+            div(class="form-floating mb-3")
+                input(type="date",name="deadline_at",class="form-control",id="deadline_at",value="#{moment(group.deadline_at).format('YYYY-MM-DD')}")
+                label(for="deadline_at") Deadline
+            a(href="#", role="button",class="btn btn-primary mx-2",onclick='fetch("/crud/groups/#{user.id}", { method:"PUT", headers: {"Content-Type": "application/json" }, body: JSON.stringify({"group_name": document.getElementById("group_name").value, "price_limit": document.getElementById("price_limit").value, "deadline_at": document.getElementById("deadline_at").value})} ).then(function(response) { if (!response.ok) { response.json().then(data => { document.getElementById("error").innerHTML = data.error; }); } else { document.getElementById("error").innerHTML = ""; } });') Update

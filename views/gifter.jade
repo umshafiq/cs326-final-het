@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div(class='page groups-bg')
+    div(class="title-font text-center")
+        h1 Sending Item to #{giftee.name}
+    div(class="row mx-auto w-50")
+        div(class="col")
+            each item in items
+                div(class="card")
+                    div(class="card-body")
+                        h6(class="card-subtitle mb-2 text-muted")
+                            a(href="#" onClick='fetch("/crud/group_users/#{group_id}/#{user.id}", { method: "PUT", headers: {"Content-Type": "application/json" }, body: JSON.stringify({is_admin: #{group_assignment.is_admin}, item_id: #{item.id}, rating: #{group_assignment.rating}})}).then(response => response.json()).then(data => { if (data.message === "success") { window.location.href = "/group/#{group_id}"; } });',role="button",class="btn btn-primary mb-3") #{item.name}
+

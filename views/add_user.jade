@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  div(class='page groups-bg')
+    div(class="title-font text-center")
+        h1 Add to #{group.group_name}
+
+    div(class="row mx-auto w-50")
+        div(class="col")
+           each user in addableUsers
+               div(class="card", id="user#{user.id}")
+                   div(class="card-body")
+                       img(src="/images/user-circle.svg",class="img-fluid rounded-start",alt="...",style="height:15vh;")
+                       h6(class="card-subtitle mb-2 text-muted") #{user.name}
+                       a(href="#" onClick='fetch("/crud/group_users/#{group.id}/#{user.id}", { method: "POST" }).then(response => response.json()).then(data => { if(data.message === "success") { document.getElementById("user#{user.id}").style.display = "none";  } })',role="button",class="btn btn-primary mb-3") Add to Group
+

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../database');
+const auth = require('../auth');
 
 // CRUD API for group management
 // Route        HTTP Verb  Description
@@ -28,16 +29,16 @@ router.get('/:id', function(req, res, next) {
 });
 
 /* Create a new group */
-router.post('/', isLoggedIn, function(req, res, next) {
-    let sql = `INSERT INTO groups (name, price_limit, deadline_at) VALUES ($1, $2, $3)`;
-    let params = [req.body.name, req.body.price_limit, req.body.deadline_at];
-    db.none(sql, params)
-        .then(() => {
+router.post('/', auth.isLoggedIn, function(req, res, next) {
+    let sql = `INSERT INTO groups (group_name, price_limit, deadline_at) VALUES ($1, $2, $3) RETURNING id`;
+    let params = [req.body.group_name, req.body.price_limit, req.body.deadline_at];
+    db.one(sql, params)
+        .then((data) => {
             let sql = `INSERT INTO group_users (group_id, user_id, is_admin) VALUES ($1, $2, TRUE)`;
-            let params = [this.lastID, req.user.id];
+            let params = [data.id, req.user.id];
             db.none(sql, params)
                 .then(() => {
-                    res.redirect('/groups/'.concat(this.lastID.toString()).concat('/edit'));
+                    res.redirect('/groups/'.concat(data.id.toString()).concat('/edit'));
                 });
         })
         .catch(err => {
@@ -49,8 +50,8 @@ router.post('/', isLoggedIn, function(req, res, next) {
 
 /* Update a group */
 router.put('/:id', function(req, res, next) {
-    let sql = `UPDATE groups SET name = $1, price_limit = $2, deadline_at = $3 WHERE id = $4`;
-    let params = [req.body.name, req.body.price_limit, req.body.deadline_at, req.params.id];
+    let sql = `UPDATE groups SET group_name = $1, price_limit = $2, deadline_at = $3 WHERE id = $4`;
+    let params = [req.body.group_name, req.body.price_limit, req.body.deadline_at, req.params.id];
     db.none(sql, params)
         .then(() => {
             res.json({
@@ -81,7 +82,7 @@ router.delete('/:id', function(req, res, next) {
 
 
 /* assign group members */
-router.post('/group/:id/assign', auth.isLoggedIn, function(req, res, next) {
+router.post('/:id/assign', auth.isLoggedIn, function(req, res, next) {
   db.any(`SELECT * FROM users INNER JOIN group_users ON group_users.user_id = users.id WHERE group_users.group_id = $1`, [req.params.id])
       .then((users) => {
           let user_is_admin = false;
